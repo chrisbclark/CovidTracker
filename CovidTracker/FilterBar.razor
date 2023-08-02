@@ -1,0 +1,60 @@
+﻿
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons;
+@using Syncfusion.Blazor.Calendars;
+@inject IStateRepository StateRepo;
+
+<div>
+    <div class="control-wrapper" id="multi-wrapper">
+        <SfMultiSelect TValue="string[]" TItem="StateModel" Mode="VisualMode.CheckBox" Width="350px" Placeholder="Select States" ShowSelectAll=true SelectAllText="Select All" UnSelectAllText="UnSelect All" AllowFiltering=true IgnoreAccent=true DataSource="@StateRepo.GetAll()" CssClass="e-success">
+            <MultiSelectFieldSettings Text="Name" Value="state"></MultiSelectFieldSettings>
+            <MultiSelectEvents TItem="StateModel" TValue="string[]" ValueChange="ValueChangeHandler"></MultiSelectEvents>
+        </SfMultiSelect>
+    </div>
+    <div class="control-wrapper" id="date-wrapper">
+        <SfDatePicker TValue="DateTime?" Placeholder="Choose a Date" ShowClearButton="true" Min="@MinDate" Max="@MaxDate">
+            <DatePickerEvents TValue="DateTime?" Selected="DateSelectedHandler"></DatePickerEvents>
+        </SfDatePicker>
+    </div>
+    <div class="control-wrapper" id="button-wrapper">
+        <SfButton CssClass="e-primary" OnClick="@ClickHandler">Apply Filter</SfButton>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<StateModelSpec> StateChangeCallback { get; set; }
+
+    private string[] SelectedStates = new string[0];
+    private string SelectedDate = String.Empty;
+
+    private void ValueChangeHandler(MultiSelectChangeEventArgs<string[]> args)
+    {
+        SelectedStates = args.Value ?? new string[0];
+    }
+
+    private void ClickHandler(Object arg)
+    {
+        StateChangeCallback.InvokeAsync(new StateModelSpec(SelectedStates, SelectedDate));
+    }
+
+    private void DateSelectedHandler(Object args)
+    {
+        var dateArg = ((SelectedEventArgs<DateTime?>)args).Value;
+        SelectedDate = dateArg == null ? null : dateArg.Value.ToString("yyyyMMdd");
+    }
+
+    public DateTime MinDate { get; set; } = new DateTime(2020, 1, 13);
+    public DateTime MaxDate { get; set; } = new DateTime(2021, 3, 7);
+
+}
+
+<style>
+    .control-wrapper {
+        margin: 0px auto;
+        padding-top: 10px;
+        margin:  5px;
+        display: inline-block;
+    }
+</style>

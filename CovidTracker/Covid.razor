@@ -1,0 +1,36 @@
+﻿@inject HttpClient Http
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Grids
+
+@if (States == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="content-wrapper">
+        <SfGrid DataSource="States" AllowPaging="true">
+            <GridColumns>
+                <GridColumn Field=@nameof(StateModel.Name) HeaderText="State" TextAlign="TextAlign.Right" Width="120px"></GridColumn>
+                <GridColumn Field=@nameof(StateModel.DateString) HeaderText="Date" TextAlign="TextAlign.Right" Width="120px"></GridColumn>
+                <GridColumn Field=@nameof(StateModel.totalTestResults) HeaderText="Total Tests" TextAlign="TextAlign.Right"  Width="120px"></GridColumn>
+                <GridColumn Field=@nameof(StateModel.positive) HeaderText="Positive" TextAlign="TextAlign.Right" Width="120px"></GridColumn>
+                <GridColumn Field=@nameof(StateModel.negative) HeaderText="Negative" TextAlign="TextAlign.Right" Width="120px"></GridColumn>
+                <GridColumn Field=@nameof(StateModel.PositiveRate) Format="f2" HeaderText="Positivity Rate" TextAlign="TextAlign.Right" Width="120px"></GridColumn>
+                <GridColumn Field=@nameof(StateModel.hospitalizedCurrently) HeaderText="Hospitalized" TextAlign="TextAlign.Right" Width="120px"></GridColumn>
+            </GridColumns>
+        </SfGrid>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public IEnumerable<StateModel>? States { get; set; }
+
+    public void UpdateData(IEnumerable<StateModel> newData)
+    {
+        States = newData;
+        StateHasChanged();
+    }
+}

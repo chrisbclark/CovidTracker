@@ -1,0 +1,37 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject IStateRepository StateRepo
+
+<PageTitle>Covid cases by state</PageTitle>
+
+<h1>Covid cases by state</h1>
+
+@if (states == null )
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <FilterBar StateChangeCallback="HandleStateChange"></FilterBar>
+    <Covid States="states"></Covid>;
+}
+
+@code {
+    private List<StateModel> states = new List<StateModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await StateRepo.Initialize();
+        IEnumerable<StateModel> statesUnsorted = StateRepo.GetAll();
+        states = new List<StateModel>(statesUnsorted);
+        states.Sort();
+    }
+
+    private async void HandleStateChange(StateModelSpec spec)
+    {
+        IEnumerable<StateModel> newData = await StateRepo.Get(spec);
+        states = new List<StateModel>(newData);
+        states.Sort();
+        StateHasChanged();
+    }
+}
