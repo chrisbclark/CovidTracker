@@ -6,7 +6,7 @@
 
 <div>
     <div class="control-wrapper" id="multi-wrapper">
-        <SfMultiSelect TValue="string[]" TItem="StateModel" Mode="VisualMode.CheckBox" Width="350px" Placeholder="Select States" ShowSelectAll=true SelectAllText="Select All" UnSelectAllText="UnSelect All" AllowFiltering=true IgnoreAccent=true DataSource="@StateRepo.GetAll()" CssClass="e-success">
+        <SfMultiSelect TValue="string[]" TItem="StateModel" Mode="VisualMode.CheckBox" Width="350px" Placeholder="Select States" ShowSelectAll=true SelectAllText="Select All" UnSelectAllText="UnSelect All" AllowFiltering=true IgnoreAccent=true DataSource="@States" CssClass="e-success">
             <MultiSelectFieldSettings Text="Name" Value="state"></MultiSelectFieldSettings>
             <MultiSelectEvents TItem="StateModel" TValue="string[]" ValueChange="ValueChangeHandler"></MultiSelectEvents>
         </SfMultiSelect>
@@ -25,6 +25,9 @@
 
     [Parameter]
     public EventCallback<StateModelSpec> StateChangeCallback { get; set; }
+
+    [Parameter]
+    public IEnumerable<StateModel> States { get; set; } = new List<StateModel>();
 
     private string[] SelectedStates = new string[0];
     private string SelectedDate = String.Empty;

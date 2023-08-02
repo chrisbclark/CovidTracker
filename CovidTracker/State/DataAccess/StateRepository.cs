@@ -29,9 +29,8 @@ namespace CovidTracker.State.DataAccess
             StateModel[]? stateArray = await Client.LoadData("https://api.covidtracking.com/v1/states/current.json");
             if (stateArray != null)
             {
-                States.AddRange(stateArray);
+                States = new List<StateModel>(stateArray);
             }
-
         }
 
         /**
@@ -53,7 +52,7 @@ namespace CovidTracker.State.DataAccess
         {
             if(!States.Any())
             {
-                throw new NotInitializedException("Repository data has not been initialized");
+                await Initialize();
             }
             if (stateModelSpec.HasDate())
             {
@@ -87,11 +86,11 @@ namespace CovidTracker.State.DataAccess
             }
         }
 
-        public IEnumerable<StateModel> GetAll()
+        public async Task<IEnumerable<StateModel>> GetAll()
         {
             if(!States.Any())
             {
-                throw new NotInitializedException("Repository data has not been initialized");
+                await Initialize();
             }
             return States;
         }

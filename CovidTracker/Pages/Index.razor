@@ -6,32 +6,32 @@
 
 <h1>Covid cases by state</h1>
 
-@if (states == null )
+@if (States == null )
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <FilterBar StateChangeCallback="HandleStateChange"></FilterBar>
-    <Covid States="states"></Covid>;
+    <FilterBar States="StatesUnsorted" StateChangeCallback="HandleStateChange"></FilterBar>
+    <Covid States="States"></Covid>;
 }
 
 @code {
-    private List<StateModel> states = new List<StateModel>();
+    private List<StateModel> States = new List<StateModel>();
+    private IEnumerable<StateModel> StatesUnsorted = new List<StateModel>();
 
     protected override async Task OnInitializedAsync()
     {
-        await StateRepo.Initialize();
-        IEnumerable<StateModel> statesUnsorted = StateRepo.GetAll();
-        states = new List<StateModel>(statesUnsorted);
-        states.Sort();
+        StatesUnsorted = await StateRepo.GetAll();
+        States = new List<StateModel>(StatesUnsorted);
+        States.Sort();
     }
 
     private async void HandleStateChange(StateModelSpec spec)
     {
         IEnumerable<StateModel> newData = await StateRepo.Get(spec);
-        states = new List<StateModel>(newData);
-        states.Sort();
+        States = new List<StateModel>(newData);
+        States.Sort();
         StateHasChanged();
     }
 }

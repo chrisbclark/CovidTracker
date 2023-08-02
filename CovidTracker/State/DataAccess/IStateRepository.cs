@@ -7,9 +7,7 @@ namespace CovidTracker.State.DataAccess
      */
     public interface IStateRepository
     {
-        public IEnumerable<StateModel> GetAll();
+        public Task<IEnumerable<StateModel>> GetAll();
         public Task<IEnumerable<StateModel>> Get(StateModelSpec stateModelSpec);
-
-        public Task Initialize();
     }
 }
